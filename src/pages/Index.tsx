@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { format, isToday, isYesterday, subDays } from "date-fns";
-import { CalendarDays, Flame, ChevronRight } from "lucide-react";
+import { CalendarDays, Flame, ChevronRight, Target, TrendingUp, Zap } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { StatsCards } from "@/components/StatsCards";
 import { LastTenDays } from "@/components/LastTenDays";
