@@ -9,9 +9,12 @@ import { MatchCard } from "@/components/MatchCard";
 import { toast } from "sonner";
 import type { Match } from "@/types/match";
 
+type OddsFilter = "all" | "2+" | "3+" | "5+";
+
 const Index = () => {
   const [matches, setMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState(true);
+  const [oddsFilter, setOddsFilter] = useState<OddsFilter>("all");
 
   useEffect(() => {
     document.title = "Tipstik — Today's Tips & Sport Predictions";
