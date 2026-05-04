@@ -77,11 +77,49 @@ const Index = () => {
         <YesterdayCarousel matches={yesterdays} />
       </section>
 
+      {/* ODDS FILTER */}
+      <section className="space-y-3">
+        <div className="flex items-center gap-2">
+          <Target className="h-5 w-5 text-primary" />
+          <h2 className="font-display font-bold text-lg">Odds Selection</h2>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {([
+            { key: "all", label: "All Games", icon: Flame, desc: "Every tip" },
+            { key: "2+", label: "2+ Odds", icon: Target, desc: "Safer picks" },
+            { key: "3+", label: "3+ Odds", icon: TrendingUp, desc: "Balanced" },
+            { key: "5+", label: "5+ Odds", icon: Zap, desc: "High reward" },
+          ] as const).map(({ key, label, icon: Icon, desc }) => {
+            const active = oddsFilter === key;
+            return (
+              <button
+                key={key}
+                onClick={() => setOddsFilter(key)}
+                className={`group relative rounded-2xl border p-4 text-left transition-all ${
+                  active
+                    ? "border-primary bg-primary/10 shadow-[0_0_0_1px_hsl(var(--primary))]"
+                    : "border-border/60 bg-card hover:border-primary/50 hover:bg-primary/5"
+                }`}
+              >
+                <Icon className={`h-5 w-5 mb-2 ${active ? "text-primary" : "text-muted-foreground"}`} />
+                <div className={`font-display font-bold text-base ${active ? "text-primary" : ""}`}>{label}</div>
+                <div className="text-xs text-muted-foreground mt-0.5">{desc}</div>
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
       {/* ALL GAMES TODAY */}
       <section className="space-y-4">
         <div className="flex items-center gap-2">
           <Flame className="h-5 w-5 text-primary" />
-          <h2 className="font-display font-bold text-lg">All Games — Today</h2>
+          <h2 className="font-display font-bold text-lg">
+            {oddsFilter === "all" ? "All Games — Today" : `${oddsFilter} Odds — Today`}
+          </h2>
+          {oddsFilter !== "all" && (
+            <span className="text-xs text-muted-foreground">({filteredToday.length})</span>
+          )}
         </div>
         {loading ? (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -89,13 +127,15 @@ const Index = () => {
               <div key={i} className="h-72 rounded-2xl bg-card animate-pulse border border-border/60" />
             ))}
           </div>
-        ) : todays.length === 0 ? (
+        ) : filteredToday.length === 0 ? (
           <div className="card-elevated rounded-2xl border border-border/60 p-8 text-center text-muted-foreground text-sm">
-            No tips for today yet. Check back soon.
+            {oddsFilter === "all"
+              ? "No tips for today yet. Check back soon."
+              : `No ${oddsFilter} odds tips for today. Try a different category.`}
           </div>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {todays.map((m) => (
+            {filteredToday.map((m) => (
               <MatchCard key={m.id} match={m} onView={(x) => toast(`${x.team_a} vs ${x.team_b}`, { description: x.prediction_text })} />
             ))}
           </div>
@@ -103,7 +143,7 @@ const Index = () => {
       </section>
 
       {/* FOOTBALL */}
-      {football.length > 0 && (
+      {football.length > 0 && oddsFilter === "all" && (
         <section className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
