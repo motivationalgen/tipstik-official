@@ -41,6 +41,12 @@ const Index = () => {
   const wins = completed.filter((m) => m.result === "win").length;
   const winRate = completed.length ? Math.round((wins / completed.length) * 100) : 0;
   const football = todays.filter((m) => m.sport === "football");
+  const filteredToday = useMemo(() => {
+    if (oddsFilter === "all") return todays;
+    const min = oddsFilter === "2+" ? 2 : oddsFilter === "3+" ? 3 : 5;
+    const max = oddsFilter === "2+" ? 3 : oddsFilter === "3+" ? 5 : Infinity;
+    return todays.filter((m) => m.odds >= min && m.odds < max);
+  }, [todays, oddsFilter]);
 
   return (
     <div className="container py-6 sm:py-10 space-y-10">
