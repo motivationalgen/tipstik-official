@@ -122,7 +122,8 @@ const Console = () => {
   useEffect(() => { if (isAdmin) { load(); loadStats(); loadMembers(); loadAdmins(); } }, [isAdmin]);
 
   if (authLoading) return <div className="container py-16 text-center text-muted-foreground">Loading...</div>;
-  if (!user || !isAdmin || !consoleToken || token !== consoleToken) return <Navigate to="/404" replace />;
+  if (!user || !isAdmin) return <Navigate to="/auth" replace />;
+  if (consoleToken && token && token !== consoleToken) return <Navigate to="/console" replace />;
 
 
   const save = async () => {

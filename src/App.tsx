@@ -36,6 +36,7 @@ const App = () => (
               <Route path="/match/:id" element={<MatchDetail />} />
               <Route path="/pricing" element={<Pricing />} />
               <Route path="/payment/callback" element={<PaymentCallback />} />
+              <Route path="/console" element={<Console />} />
               <Route path="/console/:token" element={<Console />} />
             </Route>
             <Route path="/auth" element={<Auth />} />
