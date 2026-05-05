@@ -38,9 +38,9 @@ export const Footer = () => {
         </div>
         <div className="mt-10 pt-6 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
           <p>© {new Date().getFullYear()} Tipstik. All rights reserved.</p>
-          {isAdmin && consoleToken && (
+          {isAdmin && (
             <Link
-              to={`/console/${consoleToken}`}
+              to={consoleToken ? `/console/${consoleToken}` : "/console"}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-primary/10 text-primary border border-primary/30 hover:bg-primary/20 transition-colors"
             >
               <Lock className="h-3.5 w-3.5" />
