@@ -31,23 +31,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [consoleToken, setConsoleToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const resetAuthInfo = () => {
+    setIsAdmin(false);
+    setTier("guest");
+    setConsoleToken(null);
+  };
+
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, s) => {
       setSession(s);
       setUser(s?.user ?? null);
       if (s?.user) {
-        setTimeout(() => loadAdminInfo(s.user.id), 0);
+        setLoading(true);
+        setTimeout(() => {
+          loadAdminInfo(s.user.id).finally(() => setLoading(false));
+        }, 0);
       } else {
-        setIsAdmin(false);
-        setTier("guest");
-        setConsoleToken(null);
+        resetAuthInfo();
+        setLoading(false);
       }
     });
 
-    supabase.auth.getSession().then(({ data: { session: s } }) => {
+    supabase.auth.getSession().then(async ({ data: { session: s } }) => {
       setSession(s);
       setUser(s?.user ?? null);
-      if (s?.user) loadAdminInfo(s.user.id);
+      if (s?.user) await loadAdminInfo(s.user.id);
+      else resetAuthInfo();
       setLoading(false);
     });
 
@@ -72,6 +81,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (admin) {
       const { data: token } = await supabase.from("admin_console").select("token").eq("id", 1).maybeSingle();
       setConsoleToken(token?.token ?? null);
+    } else {
+      setConsoleToken(null);
     }
   };
 
