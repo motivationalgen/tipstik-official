@@ -126,6 +126,37 @@ const Console = () => {
   if (consoleToken && token && token !== consoleToken) return <Navigate to="/console" replace />;
 
 
+  const seedDemo = async () => {
+    if (!confirm("Insert demo matches for yesterday, today, and tomorrow?")) return;
+    const today = new Date();
+    const d = (offset: number) => {
+      const x = new Date(today);
+      x.setDate(x.getDate() + offset);
+      return format(x, "yyyy-MM-dd");
+    };
+    const rows = [
+      // Yesterday
+      { team_a: "Manchester City", team_b: "Arsenal", league: "Premier League", sport: "football" as Sport, match_time: "20:00", match_date: d(-1), prediction_label: "Over 2.5 Goals", prediction_text: "Both sides have averaged 3+ goals in their last 5 meetings.", odds: 1.85, confidence: 82, result: "win" as MatchResult, tier: "free" as MatchTier, is_published: true },
+      { team_a: "Real Madrid", team_b: "Barcelona", league: "La Liga", sport: "football" as Sport, match_time: "21:00", match_date: d(-1), prediction_label: "BTTS — Yes", prediction_text: "El Clasico rarely disappoints. Both attacks in great form.", odds: 1.70, confidence: 78, result: "win" as MatchResult, tier: "free" as MatchTier, is_published: true },
+      { team_a: "Lakers", team_b: "Celtics", league: "NBA", sport: "basketball" as Sport, match_time: "02:30", match_date: d(-1), prediction_label: "Lakers +4.5", prediction_text: "Lakers strong at home, Celtics on a back-to-back.", odds: 1.90, confidence: 70, result: "loss" as MatchResult, tier: "members" as MatchTier, is_published: true },
+      { team_a: "Djokovic", team_b: "Alcaraz", league: "ATP Masters", sport: "tennis" as Sport, match_time: "18:00", match_date: d(-1), prediction_label: "Over 3.5 Sets", prediction_text: "Two evenly matched players — expect a long battle.", odds: 2.10, confidence: 75, result: "win" as MatchResult, tier: "pro" as MatchTier, is_published: true },
+      // Today
+      { team_a: "Liverpool", team_b: "Chelsea", league: "Premier League", sport: "football" as Sport, match_time: "17:30", match_date: d(0), prediction_label: "Liverpool to Win", prediction_text: "Liverpool unbeaten at Anfield in last 12.", odds: 1.95, confidence: 80, result: "pending" as MatchResult, tier: "free" as MatchTier, is_published: true },
+      { team_a: "Bayern Munich", team_b: "Dortmund", league: "Bundesliga", sport: "football" as Sport, match_time: "18:30", match_date: d(0), prediction_label: "Over 2.5 Goals", prediction_text: "Der Klassiker — both teams average 2.4 goals scored per game.", odds: 1.65, confidence: 85, result: "pending" as MatchResult, tier: "free" as MatchTier, is_published: true },
+      { team_a: "PSG", team_b: "Marseille", league: "Ligue 1", sport: "football" as Sport, match_time: "20:45", match_date: d(0), prediction_label: "PSG -1 Handicap", prediction_text: "PSG dominant at home, Marseille struggling on the road.", odds: 2.05, confidence: 72, result: "pending" as MatchResult, tier: "members" as MatchTier, is_published: true },
+      { team_a: "Warriors", team_b: "Suns", league: "NBA", sport: "basketball" as Sport, match_time: "03:00", match_date: d(0), prediction_label: "Over 225.5 Points", prediction_text: "Both teams top 5 in pace this season.", odds: 1.88, confidence: 76, result: "pending" as MatchResult, tier: "free" as MatchTier, is_published: true },
+      { team_a: "Sinner", team_b: "Medvedev", league: "ATP 1000", sport: "tennis" as Sport, match_time: "15:00", match_date: d(0), prediction_label: "Sinner to Win", prediction_text: "Sinner leads H2H 4-1 on hard court this year.", odds: 1.60, confidence: 84, result: "pending" as MatchResult, tier: "pro" as MatchTier, is_published: true },
+      // Tomorrow
+      { team_a: "Inter Milan", team_b: "Juventus", league: "Serie A", sport: "football" as Sport, match_time: "20:45", match_date: d(1), prediction_label: "Under 2.5 Goals", prediction_text: "Derby d'Italia — historically tight, both defences solid.", odds: 1.80, confidence: 74, result: "pending" as MatchResult, tier: "free" as MatchTier, is_published: true },
+      { team_a: "Atletico Madrid", team_b: "Sevilla", league: "La Liga", sport: "football" as Sport, match_time: "19:00", match_date: d(1), prediction_label: "Atletico Win & BTTS No", prediction_text: "Atletico defensive solidity at the Metropolitano.", odds: 2.40, confidence: 68, result: "pending" as MatchResult, tier: "members" as MatchTier, is_published: true },
+      { team_a: "Nuggets", team_b: "Heat", league: "NBA", sport: "basketball" as Sport, match_time: "01:30", match_date: d(1), prediction_label: "Nuggets -6.5", prediction_text: "NBA Finals rematch — Nuggets fully fit.", odds: 1.92, confidence: 77, result: "pending" as MatchResult, tier: "vip" as MatchTier, is_published: true },
+      { team_a: "Swiatek", team_b: "Sabalenka", league: "WTA 1000", sport: "tennis" as Sport, match_time: "16:00", match_date: d(1), prediction_label: "Over 21.5 Games", prediction_text: "Two heavy hitters — expect long rallies and tiebreaks.", odds: 1.75, confidence: 79, result: "pending" as MatchResult, tier: "pro" as MatchTier, is_published: true },
+    ];
+    const { error } = await supabase.from("matches").insert(rows as any);
+    if (error) toast.error(error.message);
+    else { toast.success(`Inserted ${rows.length} demo matches`); load(); }
+  };
+
   const save = async () => {
     if (!editing) return;
     const payload = { ...editing, odds: Number(editing.odds), confidence: editing.confidence ? Number(editing.confidence) : null };
