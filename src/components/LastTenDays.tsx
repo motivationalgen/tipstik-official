@@ -25,8 +25,8 @@ export const LastTenDays = ({ matches, activeDate = new Date() }: Props) => {
   };
 
   return (
-    <div className="overflow-x-auto scrollbar-hide -mx-4 px-4">
-      <div className="flex gap-2 min-w-max pb-2">
+    <div className="overflow-x-auto scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
+      <div className="flex gap-2 min-w-max pb-2 sm:min-w-0 sm:w-full">
         {days.map((d) => {
           const { wins, losses, hasData } = statsFor(d);
           const active = isSameDay(d, activeDate);
