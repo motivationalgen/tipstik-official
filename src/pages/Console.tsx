@@ -186,9 +186,14 @@ const Console = () => {
           <h1 className="font-display font-bold text-3xl">Admin <span className="text-gradient-primary">Console</span></h1>
           <p className="text-sm text-muted-foreground">Manage matches and predictions</p>
         </div>
-        <Button onClick={() => { setEditing(empty()); setOpen(true); }} className="bg-primary text-primary-foreground hover:bg-primary/90">
-          <Plus className="h-4 w-4" /> Add Match
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={seedDemo} variant="outline">
+            <Database className="h-4 w-4" /> Seed Demo Data
+          </Button>
+          <Button onClick={() => { setEditing(empty()); setOpen(true); }} className="bg-primary text-primary-foreground hover:bg-primary/90">
+            <Plus className="h-4 w-4" /> Add Match
+          </Button>
+        </div>
       </header>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
