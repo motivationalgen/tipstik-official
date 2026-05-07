@@ -35,7 +35,7 @@ export const LastTenDays = ({ matches, activeDate = new Date() }: Props) => {
               key={d.toISOString()}
               ref={active ? activeRef : undefined}
               onClick={() => navigate(`/date/${format(d, "yyyy-MM-dd")}`)}
-              className={`shrink-0 w-14 sm:w-16 rounded-lg border p-1.5 text-center transition-all hover:-translate-y-0.5 ${
+              className={`shrink-0 w-14 sm:flex-1 sm:w-auto sm:min-w-0 rounded-lg border p-1.5 text-center transition-all hover:-translate-y-0.5 ${
                 active
                   ? "bg-primary text-primary-foreground border-primary shadow-[0_0_20px_-5px_hsl(var(--primary)/0.6)]"
                   : "card-elevated border-border/60 hover:border-primary/40"
