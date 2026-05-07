@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Navigate } from "react-router-dom";
 import { format } from "date-fns";
-import { Plus, Pencil, Trash2, Eye, EyeOff, Users, UserCheck, Crown, Gem, Shield, ShieldOff, UserPlus } from "lucide-react";
+import { Plus, Pencil, Trash2, Eye, EyeOff, Users, UserCheck, Crown, Gem, Shield, ShieldOff, UserPlus, Database } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
