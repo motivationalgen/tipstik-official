@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Navigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { format } from "date-fns";
 import { Plus, Pencil, Trash2, Eye, EyeOff, Users, UserCheck, Crown, Gem, Shield, ShieldOff, UserPlus, Database } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -30,7 +30,7 @@ const empty = (): Partial<Match> => ({
 
 const Console = () => {
   const { token } = useParams<{ token: string }>();
-  const { user, isAdmin, consoleToken, loading: authLoading } = useAuth();
+  const { user, isAdmin, loading: authLoading } = useAuth();
   const [matches, setMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<Partial<Match> | null>(null);
@@ -42,8 +42,13 @@ const Console = () => {
   const [adminsLoading, setAdminsLoading] = useState(true);
   const [promoteEmail, setPromoteEmail] = useState("");
   const [promoting, setPromoting] = useState(false);
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [signingIn, setSigningIn] = useState(false);
 
   useEffect(() => { document.title = "Admin Console — Tipstik"; }, []);
+
+  void token;
 
   const load = async () => {
     setLoading(true);
@@ -122,8 +127,48 @@ const Console = () => {
   useEffect(() => { if (isAdmin) { load(); loadStats(); loadMembers(); loadAdmins(); } }, [isAdmin]);
 
   if (authLoading) return <div className="container py-16 text-center text-muted-foreground">Loading...</div>;
-  if (!user || !isAdmin) return <Navigate to="/auth" replace />;
-  if (consoleToken && token && token !== consoleToken) return <Navigate to="/console" replace />;
+
+  if (!user || !isAdmin) {
+    const submitLogin = async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!loginEmail || !loginPassword) { toast.error("Enter email and password"); return; }
+      setSigningIn(true);
+      const { error } = await supabase.auth.signInWithPassword({ email: loginEmail.trim(), password: loginPassword });
+      setSigningIn(false);
+      if (error) toast.error(error.message);
+      else toast.success("Signed in");
+    };
+    return (
+      <div className="container max-w-md py-16">
+        <div className="card-elevated rounded-2xl border border-border/60 p-6 sm:p-8 space-y-6">
+          <div className="text-center space-y-1">
+            <h1 className="font-display font-bold text-2xl">Admin Login</h1>
+            <p className="text-sm text-muted-foreground">
+              {user ? "This account is not an admin." : "Sign in with your admin credentials"}
+            </p>
+          </div>
+          {!user && (
+            <form onSubmit={submitLogin} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="admin-email">Email</Label>
+                <Input id="admin-email" type="email" autoComplete="email" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} required />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="admin-password">Password</Label>
+                <Input id="admin-password" type="password" autoComplete="current-password" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} required />
+              </div>
+              <Button type="submit" disabled={signingIn} className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-semibold">
+                {signingIn ? "Signing in..." : "Sign In"}
+              </Button>
+            </form>
+          )}
+          {user && !isAdmin && (
+            <Button onClick={() => supabase.auth.signOut()} variant="outline" className="w-full">Sign out</Button>
+          )}
+        </div>
+      </div>
+    );
+  }
 
 
   const seedDemo = async () => {
