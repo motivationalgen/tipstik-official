@@ -40,7 +40,7 @@ export const Footer = () => {
           <p>© {new Date().getFullYear()} Tipstik. All rights reserved.</p>
           {isAdmin && (
             <Link
-              to={consoleToken ? `/console/${consoleToken}` : "/console"}
+              to="/elorahenry"
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-primary/10 text-primary border border-primary/30 hover:bg-primary/20 transition-colors"
             >
               <Lock className="h-3.5 w-3.5" />
