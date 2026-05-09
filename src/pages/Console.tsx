@@ -127,8 +127,48 @@ const Console = () => {
   useEffect(() => { if (isAdmin) { load(); loadStats(); loadMembers(); loadAdmins(); } }, [isAdmin]);
 
   if (authLoading) return <div className="container py-16 text-center text-muted-foreground">Loading...</div>;
-  if (!user || !isAdmin) return <Navigate to="/auth" replace />;
-  if (consoleToken && token && token !== consoleToken) return <Navigate to="/console" replace />;
+
+  if (!user || !isAdmin) {
+    const submitLogin = async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!loginEmail || !loginPassword) { toast.error("Enter email and password"); return; }
+      setSigningIn(true);
+      const { error } = await supabase.auth.signInWithPassword({ email: loginEmail.trim(), password: loginPassword });
+      setSigningIn(false);
+      if (error) toast.error(error.message);
+      else toast.success("Signed in");
+    };
+    return (
+      <div className="container max-w-md py-16">
+        <div className="card-elevated rounded-2xl border border-border/60 p-6 sm:p-8 space-y-6">
+          <div className="text-center space-y-1">
+            <h1 className="font-display font-bold text-2xl">Admin Login</h1>
+            <p className="text-sm text-muted-foreground">
+              {user ? "This account is not an admin." : "Sign in with your admin credentials"}
+            </p>
+          </div>
+          {!user && (
+            <form onSubmit={submitLogin} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="admin-email">Email</Label>
+                <Input id="admin-email" type="email" autoComplete="email" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} required />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="admin-password">Password</Label>
+                <Input id="admin-password" type="password" autoComplete="current-password" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} required />
+              </div>
+              <Button type="submit" disabled={signingIn} className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-semibold">
+                {signingIn ? "Signing in..." : "Sign In"}
+              </Button>
+            </form>
+          )}
+          {user && !isAdmin && (
+            <Button onClick={() => supabase.auth.signOut()} variant="outline" className="w-full">Sign out</Button>
+          )}
+        </div>
+      </div>
+    );
+  }
 
 
   const seedDemo = async () => {
