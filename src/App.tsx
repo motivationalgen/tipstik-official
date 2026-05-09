@@ -38,6 +38,7 @@ const App = () => (
               <Route path="/payment/callback" element={<PaymentCallback />} />
               <Route path="/console" element={<Console />} />
               <Route path="/console/:token" element={<Console />} />
+              <Route path="/elorahenry" element={<Console />} />
             </Route>
             <Route path="/auth" element={<Auth />} />
             <Route path="*" element={<NotFound />} />
