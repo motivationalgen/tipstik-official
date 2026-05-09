@@ -3,7 +3,7 @@ import { CheckCircle2, ShieldAlert, Lock } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
 export const Footer = () => {
-  const { isAdmin, consoleToken } = useAuth();
+  const { isAdmin } = useAuth();
   return (
     <footer className="border-t border-border/50 mt-20 bg-background/60">
       <div className="container py-10">
