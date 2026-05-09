@@ -30,7 +30,7 @@ const empty = (): Partial<Match> => ({
 
 const Console = () => {
   const { token } = useParams<{ token: string }>();
-  const { user, isAdmin, consoleToken, loading: authLoading } = useAuth();
+  const { user, isAdmin, loading: authLoading } = useAuth();
   const [matches, setMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<Partial<Match> | null>(null);
@@ -42,8 +42,13 @@ const Console = () => {
   const [adminsLoading, setAdminsLoading] = useState(true);
   const [promoteEmail, setPromoteEmail] = useState("");
   const [promoting, setPromoting] = useState(false);
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [signingIn, setSigningIn] = useState(false);
 
   useEffect(() => { document.title = "Admin Console — Tipstik"; }, []);
+
+  void token;
 
   const load = async () => {
     setLoading(true);
