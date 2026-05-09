@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Navigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { format } from "date-fns";
 import { Plus, Pencil, Trash2, Eye, EyeOff, Users, UserCheck, Crown, Gem, Shield, ShieldOff, UserPlus, Database } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
